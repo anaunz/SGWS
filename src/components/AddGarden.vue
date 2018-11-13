@@ -46,7 +46,8 @@ export default {
       db.collection('garden').add({
         productKey: this.productKey,
         name: this.name,
-        address: this.address
+        address: this.address,
+        timeSet: {before: 10, after: 7}
       }).then(docRef => {
         this.$router.push('/')
       }).catch(error => console.log(err))
