@@ -3,7 +3,7 @@
     <ul class="collection with-header">
       <li class="collection-header">
         <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>
-        <router-link v-bind:to="{name: 'statistic', params: {garden_id: garden_id}}" class="secondary-content">Statistic</router-link>
+        <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="secondary-content">Statistic</router-link>
       </li>
     </ul>
     <ul class="collection with-header">
@@ -11,6 +11,8 @@
       <li class="collection-item">Garden ID#: {{garden_id}}</li>
       <li class="collection-item">Address: {{address}}</li>
       <li class="collection-item">Watering: {{watering}}</li>
+      <li class="collection-item">Location: {{location}}</li>
+      <li class="collection-item">Weather: {{weather}}</li>
     </ul>
     <button @click="smartWatering" class="btn blue">Smart Watering</button>
     <button @click="removeGarden" class="btn red">Remove Garden</button>
@@ -27,7 +29,8 @@ export default {
       name: null,
       location: null,
       address: null,
-      watering: null
+      watering: null,
+      weather: 'N/A'
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -38,22 +41,15 @@ export default {
         vm.location = doc.data().location,
         vm.address = doc.data().address,
         vm.watering = doc.data().watering
+        if(doc.data().location != null){
+          return $.getJSON('http://api.openweathermap.org/data/2.5/weather?lat=' + doc.data().location._lat + '&lon=' + doc.data().location._long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
+            vm.weather = data.main
+          })
+        }
       })
     })
   },
-  watch: {
-    '$route': 'fetchData'
-  },
   methods: {
-    fetchData () {
-      db.collection('garden').doc(this.$route.params.garden_id).get().then(doc => {
-        this.garden_id = doc.id
-        this.name = doc.data().name
-        this.location = doc.data().location
-        this.address = doc.data().address
-        this.watering = doc.data().watering
-      })
-    },
     smartWatering () {
       if(confirm('Are you sure?')) {
         

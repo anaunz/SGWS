@@ -17,12 +17,13 @@
 
 <script>
 import db from './firebase'
-
+import axios from 'axios'
 export default {
   name: 'select-garden',
   data () {
     return {
-      gardens: []
+      gardens: [],
+      loading: false
     }
   },
   created () {
@@ -31,10 +32,10 @@ export default {
         const data = {
           'garden_id': doc.id,
           'name': doc.data().name,
-          'location': doc.data().location
+          'address': doc.data().address
         }
         this.gardens.push(data)
-      });
+      })
     })
   }
 }
