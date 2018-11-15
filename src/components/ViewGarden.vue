@@ -45,8 +45,7 @@
           </ul>
         </div>
       </div>
-      
-      <button @click="removeGarden" class="btn red secondary-content">Remove Garden</button>
+      <button @click="removeGarden" class="btn red right">Remove Garden</button>
     </div>
     <div v-if="garden_id == null" class="center">
       <h5>Sorry, there is no garden id you want to see</h5>
