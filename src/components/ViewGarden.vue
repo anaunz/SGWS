@@ -15,8 +15,37 @@
         <li class="collection-item">Location: {{location}}</li>
         <li class="collection-item">Weather: {{weather}}</li>
       </ul>
-      <button @click="immediateWatering" class="btn blue">Immediate Watering</button>
-      <button @click="smartWatering" class="btn blue">Smart Watering</button>
+      <div class="row">
+        <div class="col s6">
+          <ul class="collapsible row">
+            <li class="col s6">
+              <div class="collapsible-header" @click="smartSetting">Immediate Watering</div>
+              <div class="collapsible-body">
+                <div class="input-field">
+                  <input value="1:00" type="text" class="validate">
+                  <label class="active" for="first_name2">Set Timer (min)</label>
+                </div>
+              </div>
+            </li>
+            <li class="col s6">
+              <div class="collapsible-header" @click="smartSetting">Smart Watering</div>
+              <div class="collapsible-body">
+                <div class="input-field">
+                  <input id="timeSetAfter" value="7" v-model="timeSetAfter" type="text" class="validate">
+                  <label class="active" for="first_name2">After (24-hour)</label>
+                </div>
+                <div class="input-field">
+                  <input id="timeSetBefore" value="10" v-model="timeSetBefore" type="text" class="validate">
+                  <label class="active" for="first_name2">Before (24-hour)</label>
+                </div>
+                <button class="btn blue" @click="smartWatering">Set Time</button>
+                <button class="btn blue">Skip</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
       <button @click="removeGarden" class="btn red secondary-content">Remove Garden</button>
     </div>
     <div v-if="garden_id == null" class="center">
@@ -39,7 +68,8 @@ export default {
       watering: null,
       weather: 'N/A',
       predict: null,
-      timeSet: null
+      timeSetBefore: null,
+      timeSetAfter: null
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -51,11 +81,12 @@ export default {
           vm.location = doc.data().location,
           vm.address = doc.data().address,
           vm.watering = doc.data().watering,
-          vm.timeSet = doc.data().timeSet
+          vm.timeSetBefore = doc.data().timeSet.before,
+          vm.timeSetAfter = doc.data().timeSet.after
           if(doc.data().location != null){
-            return $.getJSON('http://api.openweathermap.org/data/2.5/weather?lat=' + vm.location.lat + '&lon=' + vm.location.long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
+            return $.getJSON('https://api.openweathermap.org/data/2.5/weather?lat=' + vm.location.lat + '&lon=' + vm.location.long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
               vm.weather = data
-              vm.predict = cal(vm.weather, vm.timeSet, 95)
+              vm.predict = cal(vm.weather, vm.timeSetBefore, vm.timeSetAfter, 95)
             })
           }
         })
@@ -70,7 +101,11 @@ export default {
   methods: {
     smartWatering () {
       if(confirm('Are you sure?')) {
-        
+        return db.collection('garden').doc(this.$route.params.garden_id).update({
+          timeSet: {before: this.timeSetBefore, after: this.timeSetAfter}
+        }).catch(function(error) {
+          console.error("Error updating document: ", error);
+        })
       }
     },
     immediateWatering () {
@@ -81,13 +116,21 @@ export default {
     removeGarden () {
       if(confirm('Are you sure?')) {
         if(confirm(this.name + ' won\'t be able to get back. Are you sure?')) {
-          db.collection('garden').doc(this.$route.params.garden_id).get().then(doc => {
+          return db.collection('garden').doc(this.$route.params.garden_id).get().then(doc => {
             doc.ref.delete()
             this.$router.push('/')
+          }).catch(function(error) {
+            console.error("Error updating document: ", error);
           })
         }
         
       }
+    },
+    smartSetting () {
+      $('.collapsible').collapsible()
+      let vm = this
+      document.getElementById('timeSetBefore').value = vm.timeSetBefore
+      document.getElementById('timeSetAfter').value = vm.timeSetAfter
     }
   }
 }
