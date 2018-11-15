@@ -19,7 +19,7 @@
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <input v-model="address" type="text" class="validate" required>
+            <input v-model="address" id="address" type="text" class="validate" @input="autoCompleteAPI()" required>
             <label for="address">Address</label>
             <blockquote>Example: KMUTT, Bangkok, Thailand</blockquote>
           </div>
@@ -38,7 +38,8 @@ export default {
     return {
       productKey: null,
       name: null,
-      address: null
+      address: null,
+      location: null
     }
   },
   methods: {
@@ -47,10 +48,23 @@ export default {
         productKey: this.productKey,
         name: this.name,
         address: this.address,
+        location: this.location,
         timeSet: {before: 10, after: 7}
       }).then(docRef => {
         this.$router.push('/')
       }).catch(error => console.log(err))
+    },
+    autoCompleteAPI () {
+      let input = document.getElementById('address')
+      let autocomplete = new google.maps.places.Autocomplete(input)
+      let vm = this
+      google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        let place = autocomplete.getPlace()
+        vm.address = place.formatted_address
+        let lat = place.geometry.location.lat()
+        let lng = place.geometry.location.lng()
+        vm.location = {lat: lat, long: lng}
+      })
     }
   }
 }
