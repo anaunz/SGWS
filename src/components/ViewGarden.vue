@@ -4,7 +4,7 @@
       <ul class="collection with-header">
         <li class="collection-header">
           <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>
-          <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather, predict: predict}}" class="secondary-content">Statistic</router-link>
+          <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather, predict: predict}}" class="right"> Statistic</router-link>
         </li>
       </ul>
       <ul class="collection with-header">
@@ -16,10 +16,10 @@
         <li class="collection-item">Weather: {{weather}}</li>
       </ul>
       <div class="row">
-        <div class="col s6">
-          <ul class="collapsible row">
-            <li class="col s6">
-              <div class="collapsible-header" @click="smartSetting">Immediate Watering</div>
+        <div class="col s12 l6">
+          <ul class="collapsible col s12 m6">
+            <li class="">
+              <div class="collapsible-header" @click="collapse">Immediate Watering</div>
               <div class="collapsible-body">
                 <div class="input-field">
                   <input value="1:00" type="text" class="validate">
@@ -28,8 +28,10 @@
                 </div>
               </div>
             </li>
-            <li class="col s6">
-              <div class="collapsible-header" @click="smartSetting">Smart Watering</div>
+          </ul>
+          <ul class="collapsible col s12 m6">
+            <li class="">
+              <div class="collapsible-header" @click="collapse">Smart Watering</div>
               <div class="collapsible-body">
                 <div class="input-field">
                   <input id="timeSetAfter" value="7" v-model="timeSetAfter" type="text" class="validate">
@@ -41,6 +43,22 @@
                 </div>
                 <button class="btn blue" @click="smartWatering">Set Time</button>
                 <button class="btn blue" @click="skipSmart">Skip</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="col s12 l6">
+          <ul class="collapsible right">
+            <li>
+              <div class="collapsible-header" @click="collapse">Location</div>
+              <div class="collapsible-body white">
+                
+                <div v-if="markers != null">
+                  <gmap-map :center="markers.position" :zoom="16" style="width:400px;  height: 400px;">
+                    <gmap-marker :position="markers.position"></gmap-marker>
+                  </gmap-map>
+                </div>
+
               </div>
             </li>
           </ul>
@@ -60,6 +78,9 @@ import cal from './calculation'
 import firebase from 'firebase'
 export default {
   name: 'view-garden',
+  components: {
+    Map
+  },
   data () {
     return {
       garden_id: null,
@@ -70,7 +91,8 @@ export default {
       weather: 'N/A',
       predict: null,
       timeSetBefore: null,
-      timeSetAfter: null
+      timeSetAfter: null,
+      markers: null
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -88,6 +110,13 @@ export default {
             return $.getJSON('https://api.openweathermap.org/data/2.5/weather?lat=' + vm.location.lat + '&lon=' + vm.location.long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
               vm.weather = data
               vm.predict = cal(vm.weather, vm.timeSetBefore, vm.timeSetAfter, 95)
+              const marker = {
+                lat: vm.location.lat,
+                lng: vm.location.long
+              }
+              vm.markers = { position: marker }
+              document.getElementById('timeSetBefore').value = vm.timeSetBefore
+              document.getElementById('timeSetAfter').value = vm.timeSetAfter
             })
           }
         })
@@ -143,14 +172,10 @@ export default {
             console.error("Error updating document: ", error);
           })
         }
-        
       }
     },
-    smartSetting () {
+    collapse () {
       $('.collapsible').collapsible()
-      let vm = this
-      document.getElementById('timeSetBefore').value = vm.timeSetBefore
-      document.getElementById('timeSetAfter').value = vm.timeSetAfter
     }
   }
 }
