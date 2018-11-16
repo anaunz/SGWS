@@ -24,6 +24,7 @@
                 <div class="input-field">
                   <input value="1:00" type="text" class="validate">
                   <label class="active" for="first_name2">Set Timer (min)</label>
+                  <button class="btn blue" @click="immediateWatering">Water It Now!</button>
                 </div>
               </div>
             </li>
@@ -39,7 +40,7 @@
                   <label class="active" for="first_name2">Before (24-hour)</label>
                 </div>
                 <button class="btn blue" @click="smartWatering">Set Time</button>
-                <button class="btn blue">Skip</button>
+                <button class="btn blue" @click="skipSmart">Skip</button>
               </div>
             </li>
           </ul>
@@ -56,6 +57,7 @@
 <script>
 import db from './firebase'
 import cal from './calculation'
+import firebase from 'firebase'
 export default {
   name: 'view-garden',
   data () {
@@ -99,9 +101,22 @@ export default {
   },
   methods: {
     smartWatering () {
-      if(confirm('Are you sure?')) {
+      if(confirm('Are you sure to change time setting?')) {
         return db.collection('garden').doc(this.$route.params.garden_id).update({
           timeSet: {before: this.timeSetBefore, after: this.timeSetAfter}
+        }).then(noData => {
+          this.$router.go()
+        }).catch(function(error) {
+          console.error("Error updating document: ", error);
+        })
+      }
+    },
+    skipSmart () {
+      if(confirm('Are you sure to skip the next smart watering?')) {
+        return db.collection('garden').doc(this.$route.params.garden_id).update({
+          watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Smart Skip'})
+        }).then(noData => {
+          this.$router.go()
         }).catch(function(error) {
           console.error("Error updating document: ", error);
         })
@@ -109,7 +124,13 @@ export default {
     },
     immediateWatering () {
       if(confirm('Are you sure?')) {
-        
+        return db.collection('garden').doc(this.$route.params.garden_id).update({
+          watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Immediate Watering'})
+        }).then(noData => {
+          this.$router.go()
+        }).catch(function(error) {
+          console.error("Error updating document: ", error);
+        })
       }
     },
     removeGarden () {

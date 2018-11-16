@@ -27,7 +27,7 @@ export default {
     }
   },
   created () {
-    db.collection('garden').get().then(querySnapShot => {
+    db.collection('garden').orderBy("created", "desc").get().then(querySnapShot => {
       querySnapShot.forEach(doc => {
         const data = {
           'garden_id': doc.id,
