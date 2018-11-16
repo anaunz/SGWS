@@ -7,6 +7,8 @@
     </ul>
     <h4>About Us</h4>
     <p>
+      This website is one of projects in Software Engineering CPE327 class. Smart Garden Watering System is a website that will automatically water your garden.<br>
+      Created By:<br>
       Thanason Eiamyingsakul 59070501037<br>
       Thanyaboon Hirundomrong 59070501039<br>
       Sorawit Therdkiattikoon 59070501070<br>

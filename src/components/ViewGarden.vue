@@ -144,7 +144,7 @@ export default {
       if(confirm('Are you sure to skip the next smart watering?')) {
         return db.collection('garden').doc(this.$route.params.garden_id).update({
           watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Smart Skip'})
-        }).then(noData => {
+        }).then().then(noData => {
           this.$router.go()
         }).catch(function(error) {
           console.error("Error updating document: ", error);
