@@ -24,7 +24,8 @@
                 <div class="input-field">
                   <input value="1:00" type="text" class="validate">
                   <label class="active" for="first_name2">Set Timer (min)</label>
-                  <button class="btn blue" @click="immediateWatering">Water It Now!</button>
+                  <button v-if="daily == 1" class="btn blue" @click="immediateWatering">Water It Now!</button>
+                  <button v-if="daily == 0" class="btn blue" @click="immediateWatering" disabled>Water It Now!</button>
                 </div>
               </div>
             </li>
@@ -42,7 +43,8 @@
                   <label class="active" for="first_name2">Before (24-hour)</label>
                 </div>
                 <button class="btn blue" @click="smartWatering">Set Time</button>
-                <button class="btn blue" @click="skipSmart">Skip</button>
+                <button v-if="daily == 1" class="btn blue" @click="skipSmart">Skip</button>
+                <button v-if="daily == 0" class="btn blue" @click="skipSmart" disabled>Skip</button>
               </div>
             </li>
           </ul>
@@ -54,7 +56,7 @@
               <div class="collapsible-body white">
                 
                 <div v-if="markers != null">
-                  <gmap-map :center="markers.position" :zoom="16" style="width:400px;  height: 400px;">
+                  <gmap-map :center="markers.position" :zoom="16" style="width:400px; height: 400px;">
                     <gmap-marker :position="markers.position"></gmap-marker>
                   </gmap-map>
                 </div>
@@ -89,6 +91,7 @@ export default {
       address: null,
       watering: null,
       weather: 'N/A',
+      daily: null,
       predict: null,
       timeSetBefore: null,
       timeSetAfter: null,
@@ -105,7 +108,8 @@ export default {
           vm.address = doc.data().address,
           vm.watering = doc.data().watering,
           vm.timeSetBefore = doc.data().timeSet.before,
-          vm.timeSetAfter = doc.data().timeSet.after
+          vm.timeSetAfter = doc.data().timeSet.after,
+          vm.daily = doc.data().daily
           if(doc.data().location != null){
             return $.getJSON('https://api.openweathermap.org/data/2.5/weather?lat=' + vm.location.lat + '&lon=' + vm.location.long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
               vm.weather = data
@@ -143,7 +147,8 @@ export default {
     skipSmart () {
       if(confirm('Are you sure to skip the next smart watering?')) {
         return db.collection('garden').doc(this.$route.params.garden_id).update({
-          watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Smart Skip'})
+          watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Smart Skip'}),
+          daily: 0
         }).then().then(noData => {
           this.$router.go()
         }).catch(function(error) {
@@ -154,7 +159,8 @@ export default {
     immediateWatering () {
       if(confirm('Are you sure?')) {
         return db.collection('garden').doc(this.$route.params.garden_id).update({
-          watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Immediate Watering'})
+          watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Immediate Watering'}),
+          daily: 0
         }).then(noData => {
           this.$router.go()
         }).catch(function(error) {
