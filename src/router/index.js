@@ -3,7 +3,8 @@ import Router from 'vue-router'
 import SelectGarden from '@/components/SelectGarden'
 import ViewGarden from '@/components/ViewGarden'
 import AddGarden from '@/components/AddGarden'
-import Statistic from '@/components/statistic'
+import Statistic from '@/components/Statistic'
+import About from '@/components/About'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/statistic/:garden_id',
       name: 'statistic',
       component: Statistic
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
     }
   ]
 })
