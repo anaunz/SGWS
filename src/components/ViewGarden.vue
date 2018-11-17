@@ -76,7 +76,6 @@
 
 <script>
 import db from './firebase'
-import cal from './calculation'
 import firebase from 'firebase'
 export default {
   name: 'view-garden',
@@ -92,7 +91,6 @@ export default {
       watering: null,
       weather: 'N/A',
       daily: null,
-      predict: null,
       timeSetBefore: null,
       timeSetAfter: null,
       markers: null,
@@ -114,7 +112,6 @@ export default {
           if(doc.data().location != null){
             return $.getJSON('https://api.openweathermap.org/data/2.5/weather?lat=' + vm.location.lat + '&lon=' + vm.location.long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
               vm.weather = data
-              vm.predict = cal(vm.weather, vm.timeSetBefore, vm.timeSetAfter, 95)
               const marker = {
                 lat: vm.location.lat,
                 lng: vm.location.long
@@ -163,11 +160,10 @@ export default {
           watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Immediate Watering'}),
           daily: 1
         }).then(noData => {
-
           var xhr = new XMLHttpRequest()
           xhr.open('POST', 'http://35.225.63.230:8000/immediateWatering', true)
           xhr.send('{time=1}')
-
+          this.$router.go()
         }).catch(function(error) {
           console.error("Error updating document: ", error);
         })

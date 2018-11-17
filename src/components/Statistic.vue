@@ -8,7 +8,7 @@
       </ul>
       <h4>Statistic</h4>
       Weather from API: {{weather}} <br>
-      Prediction: {{predict}}
+      Time Setting: {{timeSet}} <br>
     </div>
     <div v-if="garden_id == null" class="center">
       <h5>Sorry, there is no garden id you want to see</h5>
@@ -18,15 +18,13 @@
 
 <script>
 import db from './firebase'
-import cal from './calculation'
 export default {
   name: 'statistic',
   data () {
     return {
       garden_id: null,
       weather: 'N/A',
-      timeSet: null,
-      predict: null
+      timeSet: null
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -38,7 +36,6 @@ export default {
           if(doc.data().location != null){
             return $.getJSON('https://api.openweathermap.org/data/2.5/weather?lat=' + doc.data().location.lat + '&lon=' + doc.data().location.long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
               vm.weather = data
-              vm.predict = cal(vm.weather, vm.timeSet.before, vm.timeSet.after, 95)
             })
           }
         })
