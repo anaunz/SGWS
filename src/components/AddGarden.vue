@@ -51,7 +51,7 @@ export default {
         location: this.location,
         timeSet: {before: 10, after: 7},
         created: new Date(),
-        daily: 1
+        daily: 0
       }).then(docRef => {
         this.$router.push('/')
       }).catch(error => console.log(err))

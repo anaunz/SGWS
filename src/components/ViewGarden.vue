@@ -22,10 +22,10 @@
               <div class="collapsible-header" @click="collapse">Immediate Watering</div>
               <div class="collapsible-body">
                 <div class="input-field">
-                  <input value="1:00" type="text" class="validate">
+                  <input v-model="waterNow" value="1:00" type="text" class="validate">
                   <label class="active" for="first_name2">Set Timer (min)</label>
-                  <button v-if="daily == 1" class="btn blue" @click="immediateWatering">Water It Now!</button>
-                  <button v-if="daily == 0" class="btn blue" @click="immediateWatering" disabled>Water It Now!</button>
+                  <button v-if="daily == 0" class="btn blue" @click="immediateWatering">Water It Now!</button>
+                  <button v-if="daily == 1" class="btn blue" @click="immediateWatering" disabled>Water It Now!</button>
                 </div>
               </div>
             </li>
@@ -43,8 +43,8 @@
                   <label class="active" for="first_name2">Before (24-hour)</label>
                 </div>
                 <button class="btn blue" @click="smartWatering">Set Time</button>
-                <button v-if="daily == 1" class="btn blue" @click="skipSmart">Skip</button>
-                <button v-if="daily == 0" class="btn blue" @click="skipSmart" disabled>Skip</button>
+                <button v-if="daily == 0" class="btn blue" @click="skipSmart">Skip</button>
+                <button v-if="daily == 1" class="btn blue" @click="skipSmart" disabled>Skip</button>
               </div>
             </li>
           </ul>
@@ -95,7 +95,8 @@ export default {
       predict: null,
       timeSetBefore: null,
       timeSetAfter: null,
-      markers: null
+      markers: null,
+      waterNow: 1
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -148,7 +149,7 @@ export default {
       if(confirm('Are you sure to skip the next smart watering?')) {
         return db.collection('garden').doc(this.$route.params.garden_id).update({
           watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Smart Skip'}),
-          daily: 0
+          daily: 1
         }).then().then(noData => {
           this.$router.go()
         }).catch(function(error) {
@@ -160,9 +161,13 @@ export default {
       if(confirm('Are you sure?')) {
         return db.collection('garden').doc(this.$route.params.garden_id).update({
           watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Immediate Watering'}),
-          daily: 0
+          daily: 1
         }).then(noData => {
-          this.$router.go()
+
+          var xhr = new XMLHttpRequest()
+          xhr.open('POST', 'http://35.225.63.230:8000/immediateWatering', true)
+          xhr.send('{time=1}')
+
         }).catch(function(error) {
           console.error("Error updating document: ", error);
         })
