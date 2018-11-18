@@ -3,8 +3,10 @@
     <div v-if="garden_id != null">
       <ul class="collection with-header">
         <li class="collection-header">
-          <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>predi
-          <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="right"> Statistic</router-link>
+          <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>
+          <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="right">Statistic</router-link>
+          <div class="right"> | </div>
+          <router-link v-if="garden_id != null" v-bind:to="{name: 'edit-garden', params: {garden_id: garden_id}}" class="right">Edit Garden</router-link>
         </li>
       </ul>
       <ul class="collection with-header">
@@ -22,7 +24,7 @@
               <div class="collapsible-header" @click="collapse">Immediate Watering</div>
               <div class="collapsible-body">
                 <div class="input-field">
-                  <input v-model="waterNow" value="1:00" type="text" class="validate">
+                  <input v-model="waterNow" type="text" class="validate">
                   <label class="active" for="first_name2">Set Timer (min)</label>
                   <button v-if="daily == 0" class="btn blue" @click="immediateWatering">Water It Now!</button>
                   <button v-if="daily == 1" class="btn blue" @click="immediateWatering" disabled>Water It Now!</button>
@@ -35,11 +37,11 @@
               <div class="collapsible-header" @click="collapse">Smart Watering</div>
               <div class="collapsible-body">
                 <div class="input-field">
-                  <input id="timeSetAfter" value="7" v-model="timeSetAfter" type="text" class="validate">
+                  <input id="timeSetAfter" v-model="timeSetAfter" type="text" class="validate">
                   <label class="active" for="first_name2">After (24-hour)</label>
                 </div>
                 <div class="input-field">
-                  <input id="timeSetBefore" value="10" v-model="timeSetBefore" type="text" class="validate">
+                  <input id="timeSetBefore" v-model="timeSetBefore" type="text" class="validate">
                   <label class="active" for="first_name2">Before (24-hour)</label>
                 </div>
                 <button class="btn blue" @click="smartWatering">Set Time</button>
@@ -161,7 +163,8 @@ export default {
           daily: 1
         }).then(noData => {
           let xhr = new XMLHttpRequest()
-          xhr.open('POST', 'http://35.225.63.230:8000/immediateWatering', true)
+          xhr.open('POST', 'http://35.225.63.230:8000/immediateWatering')
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
           xhr.send('time=1')
           this.$router.go()
         }).catch(function(error) {

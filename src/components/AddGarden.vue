@@ -2,7 +2,7 @@
   <div id="add-garden" class="container">
     <h4>Add Garden</h4>
     <div class="row">
-      <form class="col s12">
+      <div class="col s12">
         <div class="row">
           <div class="input-field col s12">
             <input v-model="productKey" type="text" class="validate" required>
@@ -24,9 +24,9 @@
             <blockquote>Example: KMUTT, Bangkok, Thailand</blockquote>
           </div>
         </div>
-      </form>
+        <button @click="addGarden" class="btn">Add a garden</button>
+      </div>
     </div>
-    <button @click="addGarden" class="btn">Add a garden</button>
   </div>
 </template>
 
@@ -44,17 +44,28 @@ export default {
   },
   methods: {
     addGarden () {
-      db.collection('garden').add({
-        productKey: this.productKey,
-        name: this.name,
-        address: this.address,
-        location: this.location,
-        timeSet: {before: 10, after: 7},
-        created: new Date(),
-        daily: 0
-      }).then(docRef => {
-        this.$router.push('/')
-      }).catch(error => console.log(err))
+      if(this.productKey != null && this.name != null && this.address != null){
+        let patt = new RegExp(/([A-Z])-\d{3}-\d{3}/)
+        if(patt.test(this.productKey) && this.productKey.length == 9){
+          db.collection('garden').add({
+            productKey: this.productKey,
+            name: this.name,
+            address: this.address,
+            location: this.location,
+            timeSet: {before: 10, after: 7},
+            created: new Date(),
+            daily: 0
+          }).then(docRef => {
+            this.$router.push('/')
+          }).catch(error => console.log(err))
+        }
+        else{
+          alert('Product key is not valid')
+        }
+      }
+      else{
+        alert("All fields must be filled")
+      }
     },
     autoCompleteAPI () {
       let input = document.getElementById('address')
