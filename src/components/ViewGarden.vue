@@ -3,8 +3,8 @@
     <div v-if="garden_id != null">
       <ul class="collection with-header">
         <li class="collection-header">
-          <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>
-          <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather, predict: predict}}" class="right"> Statistic</router-link>
+          <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>predi
+          <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="right"> Statistic</router-link>
         </li>
       </ul>
       <ul class="collection with-header">
@@ -160,9 +160,9 @@ export default {
           watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Immediate Watering'}),
           daily: 1
         }).then(noData => {
-          var xhr = new XMLHttpRequest()
+          let xhr = new XMLHttpRequest()
           xhr.open('POST', 'http://35.225.63.230:8000/immediateWatering', true)
-          xhr.send('{time=1}')
+          xhr.send('time=1')
           this.$router.go()
         }).catch(function(error) {
           console.error("Error updating document: ", error);
