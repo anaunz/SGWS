@@ -3,7 +3,7 @@
     <div v-if="garden_id != null">
       <ul class="collection with-header">
         <li class="collection-header">
-          <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>predi
+          <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>
           <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="right"> Statistic</router-link>
         </li>
       </ul>
