@@ -5,7 +5,7 @@
         <router-link v-if="garden_id != null" v-bind:to="{name: 'view-garden', params: {garden_id: garden_id}}" class="fa fa-angle-left fa-lg"></router-link>
       </li>
     </ul>
-    <h4>Add Garden</h4>
+    <h4>Edit Garden</h4>
     <div class="row">
       <form class="col s12">
         <div class="row">
