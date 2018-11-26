@@ -2,14 +2,32 @@
   <div id="add-garden" class="container">
     <h4>Add Garden</h4>
     <div class="row">
+      <form class="col s2">
+        <div class="row">
+          <div class="input-field col s12">
+           <p>Product key : </p> 
+          </div>
+        </div>
+        </form>
+        <form class="col s10">
+        <div class="row">
+          <div class="input-field col s12">
+            <input v-model="productkey" type="text" class="validate" required>
+            <label for="name">Productkey</label>
+            <blockquote>Example: A-123-456</blockquote>
+          </div>
+        </div>
+        </form>
+        </div>
+   <!-- <div class="row">
         <div class="row">
           <div class="input-field col s12">
             <input v-model="productKey" type="text" class="validate" required>
             <label for="productKey">Product Key</label>
             <blockquote>Example: A-123-456</blockquote>
           </div>
-        </div>
-        </form>
+        </div>-->
+    
         <div class="row">
       <form class="col s2">
         <div class="row">
