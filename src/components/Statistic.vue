@@ -46,15 +46,13 @@
 
 <script>
 import db from './firebase'
-import cal from './calculation'
 export default {
   name: 'statistic',
   data () {
     return {
       garden_id: null,
       weather: 'N/A',
-      timeSet: null,
-      predict: null
+      timeSet: null
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -64,9 +62,8 @@ export default {
           vm.garden_id = doc.id,
           vm.timeSet = doc.data().timeSet
           if(doc.data().location != null){
-            return $.getJSON('http://api.openweathermap.org/data/2.5/weather?lat=' + doc.data().location.lat + '&lon=' + doc.data().location.long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
+            return $.getJSON('https://api.openweathermap.org/data/2.5/weather?lat=' + doc.data().location.lat + '&lon=' + doc.data().location.long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
               vm.weather = data
-              vm.predict = cal(vm.weather, vm.timeSet, 95)
             })
           }
         })
