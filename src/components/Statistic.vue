@@ -1,5 +1,5 @@
 <template>
-  <div id="statistic" class="container">
+  <div id="statistic" v-if="weather !== 'N/A'" class="container">
     <div v-if="garden_id != null">
       <ul class="collection with-header">
         <li class="collection-header">
@@ -7,7 +7,7 @@
         </li>
       </ul>
       <h4>Statistic</h4>
-      Weather at " {{weather.name}} {{weather.sys.country}} "from API:<br>
+      Weather at "{{weather.name}} {{weather.sys.country}}" from API:<br>
       <table>
         <thead>
           <tr>
@@ -22,7 +22,7 @@
             <td><div class="col s12 m8 offset-m2 l6 offset-l3">
           <div class="row valign-wrapper">
             <div class="col s2">
-              <img src="assets/1.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+              <i class="fas fa-cloud-sun-rain" style="font-size:60px"></i>
             </div>
             <div class="col s10">
               <span class="black-text">
@@ -35,8 +35,6 @@
           </tr>
         </tbody>
       </table>
-      <br>
-      Prediction: {{predict}}
     </div>
     <div v-if="garden_id == null" class="center">
       <h5>Sorry, there is no garden id you want to see</h5>
@@ -51,7 +49,7 @@ export default {
   data () {
     return {
       garden_id: null,
-      weather: 'N/A',
+      weather: "N/A",
       timeSet: null
     }
   },

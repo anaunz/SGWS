@@ -9,7 +9,6 @@
             <blockquote>Example: A-123-456</blockquote>
           </div>
         </div>
-        </form>
         <div class="row">
       <form class="col s2">
         <div class="row">
