@@ -1,75 +1,89 @@
 <template>
   <div id="view-garden" class="container">
     <div v-if="garden_id != null">
-      <ul class="collection with-header">
-        <li class="collection-header">
-          <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>
-          <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="right">Statistic</router-link>
-          <div class="right"> | </div>
-          <router-link v-if="garden_id != null" v-bind:to="{name: 'edit-garden', params: {garden_id: garden_id}}" class="right">Edit Garden</router-link>
-        </li>
-      </ul>
-      <ul class="collection with-header">
-        <li class="collection-header"><h4>{{name}}</h4></li>
-        <li class="collection-item">Garden ID#: {{garden_id}}</li>
-        <li class="collection-item">Address: {{address}}</li>
-        <li class="collection-item">Watering: {{watering}}</li>
-        <li class="collection-item">Location: {{location}}</li>
-        <li class="collection-item">Weather: {{weather}}</li>
-      </ul>
       <div class="row">
-        <div class="col s12 l6">
-          <ul class="collapsible col s12 m6">
+        <ul class="collection with-header" style="border-style: none">
+          <li class="collection-header">
+            <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>
+            <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="right"> Statistic</router-link>
+          </li>
+          </ul>
+        </div> 
+        <div class="row">
+          <h2>{{name}}</h2>
+        </div>
+        <div class="row">
+          <p>Garden ID#: {{garden_id}}</p>
+        </div>
+        <div class="row">
+          <ul class="collapsible " style="border-style: none; background-color:white;" >
+            <li>
+              <div class="collapsible-header" @click="collapse" >Location : {{address}} </div>
+              <div class="collapsible-body white">
+                <div v-if="markers != null">
+                  <gmap-map :center="markers.position" :zoom="16" style="width:100%; height: 400px;">
+                    <gmap-marker :position="markers.position"></gmap-marker>
+                  </gmap-map>
+                </div>
+              </div>
+            </li>
+          </ul>
+      </div>
+      <div class="row">
+        <p style="text-align : center">Real Time Status</p>
+      </div>
+      <div class="row">
+        <div class="col s6" >
+            <i style="font-size : 62px; " class="fas fa-cloud-sun-rain center-align"></i>
+            <p style="text-align : center">Weather : {{weather.weather[0].main}}  </p>
+            <p style="text-align : center">Temperature : {{(weather.main.temp-272.15).toFixed(1)}} °C</p>
+            <p style="text-align : center">Humidity : {{weather.main.humidity}} %</p>
+            <p style="text-align : center">Wind : {{weather.wind.speed}} m/s </p>
+        </div>
+        <div class="col s6">
+          <i style="font-size : 62px;" class="fas fa-tint"></i>
+          <p style="text-align : center">Soil Moisture: {{watering[0].moisture}} %  </p>
+          <p style="text-align : center"> Watering Status: {{watering[0].status}} </p>
+          <p style="text-align : center"> Watering: {{watering[0].time.seconds}} </p>
+        </div>
+      </div>
+      <div class="row" style="width: 100%">
+        <ul class="collapsible col s12 m6" >
             <li class="">
               <div class="collapsible-header" @click="collapse">Immediate Watering</div>
               <div class="collapsible-body">
                 <div class="input-field">
-                  <input v-model="waterNow" type="text" class="validate">
+                  <input v-model="waterNow" value="1:00" type="text" class="validate">
                   <label class="active" for="first_name2">Set Timer (min)</label>
-                  <button v-if="daily == 0" class="btn blue" @click="immediateWatering">Water It Now!</button>
-                  <button v-if="daily == 1" class="btn blue" @click="immediateWatering" disabled>Water It Now!</button>
+                  <button v-if="daily == 0" class="btn blue" style='background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));' @click="immediateWatering">Water It Now!</button>
+                  <button v-if="daily == 1" class="btn blue"style='color : black;background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));' @click="immediateWatering" disabled>Water It Now!</button>
                 </div>
               </div>
             </li>
-          </ul>
-          <ul class="collapsible col s12 m6">
+        </ul>
+            <ul class="collapsible col s12 m6" style="max-width:50%">
             <li class="">
               <div class="collapsible-header" @click="collapse">Smart Watering</div>
               <div class="collapsible-body">
                 <div class="input-field">
-                  <input id="timeSetAfter" v-model="timeSetAfter" type="text" class="validate">
+                  <input id="timeSetAfter" value="7" v-model="timeSetAfter" type="text" class="validate">
                   <label class="active" for="first_name2">After (24-hour)</label>
                 </div>
                 <div class="input-field">
-                  <input id="timeSetBefore" v-model="timeSetBefore" type="text" class="validate">
+                  <input id="timeSetBefore" value="10" v-model="timeSetBefore" type="text" class="validate">
                   <label class="active" for="first_name2">Before (24-hour)</label>
                 </div>
-                <button class="btn blue" @click="smartWatering">Set Time</button>
-                <button v-if="daily == 0" class="btn blue" @click="skipSmart">Skip</button>
+                <button class="btn blue" @click="smartWatering" style='color : #555555; background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));'>Set Time</button>
+                <button v-if="daily == 0" class="btn blue" @click="skipSmart" style="color : #555555; background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));"> Skip</button>
                 <button v-if="daily == 1" class="btn blue" @click="skipSmart" disabled>Skip</button>
               </div>
             </li>
           </ul>
-        </div>
-        <div class="col s12 l6">
-          <ul class="collapsible right">
-            <li>
-              <div class="collapsible-header" @click="collapse">Location</div>
-              <div class="collapsible-body white">
-                
-                <div v-if="markers != null">
-                  <gmap-map :center="markers.position" :zoom="16" style="width:400px; height: 400px;">
-                    <gmap-marker :position="markers.position"></gmap-marker>
-                  </gmap-map>
-                </div>
-
-              </div>
-            </li>
-          </ul>
-        </div>
+        
       </div>
+      
       <button @click="removeGarden" class="btn red right">Remove Garden</button>
-    </div>
+      </div>
     <div v-if="garden_id == null" class="center">
       <h5>Sorry, there is no garden id you want to see</h5>
     </div>
@@ -163,8 +177,7 @@ export default {
           daily: 1
         }).then(noData => {
           let xhr = new XMLHttpRequest()
-          xhr.open('POST', 'http://35.225.63.230:8000/immediateWatering')
-          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+          xhr.open('POST', 'http://35.225.63.230:8000/immediateWatering', true)
           xhr.send('time=1')
           this.$router.go()
         }).catch(function(error) {
@@ -184,9 +197,16 @@ export default {
         }
       }
     },
+    showModal () {
+      this.$refs.myModalRef.show()
+    },
+    hideModal () {
+      this.$refs.myModalRef.hide()
+    },
     collapse () {
       $('.collapsible').collapsible()
     }
+    
   }
 }
 </script>
