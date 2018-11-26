@@ -2,7 +2,6 @@
   <div id="add-garden" class="container">
     <h4>Add Garden</h4>
     <div class="row">
-      <div class="col s12">
         <div class="row">
           <div class="input-field col s12">
             <input v-model="productKey" type="text" class="validate" required>
@@ -10,6 +9,16 @@
             <blockquote>Example: A-123-456</blockquote>
           </div>
         </div>
+        </form>
+        <div class="row">
+      <form class="col s2">
+        <div class="row">
+          <div class="input-field col s12">
+           <p>Garden Name : </p> 
+          </div>
+        </div>
+        </form>
+        <form class="col s10">
         <div class="row">
           <div class="input-field col s12">
             <input v-model="name" type="text" class="validate" required>
@@ -17,16 +26,28 @@
             <blockquote>Example: My Garden</blockquote>
           </div>
         </div>
+        </form>
+        </div>
+        <div class="row">
+      <form class="col s2">
+        <div class="row">
+          <div class="input-field col s12">
+           <p>Address : </p> 
+          </div>
+        </div>
+        </form>
+        <form class="col s10">
         <div class="row">
           <div class="input-field col s12">
             <input v-model="address" id="address" type="text" class="validate" @input="autoCompleteAPI()" required>
-            <label for="address">Address</label>
+            <label for="name">Address</label>
             <blockquote>Example: KMUTT, Bangkok, Thailand</blockquote>
           </div>
         </div>
-        <button @click="addGarden" class="btn">Add a garden</button>
-      </div>
-    </div>
+        </form>
+        </div>
+    <button @click="addGarden" class="btn">Add a garden</button>
+  </div>
   </div>
 </template>
 
