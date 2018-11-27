@@ -31,7 +31,7 @@
                   <div class="collapsible-body white">
                     <div v-for="(hist, key) in history" :key="key" class="left-align">
                       Moisture: {{hist.moisture}}<br>
-                      Temperature: {{hist.temp}}<br>
+                      Temperature: {{(hist.temp - 272.15).toFixed(1)}} °C<br>
                       Time: {{changeTime(hist.time.seconds).Hour}}:{{changeTime(hist.time.seconds).Min}} | {{changeTime(hist.time.seconds).Day}}-{{changeTime(hist.time.seconds).Month}}-{{changeTime(hist.time.seconds).Year}}<br>
                       Status: {{hist.status}}<br>
                       <hr>
