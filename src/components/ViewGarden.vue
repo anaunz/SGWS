@@ -9,8 +9,8 @@
             </li>
           </ul>
           <div class="row">
-            <div class="col s3"><h2>{{name}}</h2><p>Garden ID#: {{garden_id}}</p><p>Location: {{address}}</p></div>
-            <div class="col s9 right-align">
+            <div class="col s4"><h2>{{name}}</h2><p>Garden ID#: {{garden_id}}</p><p>Location: {{address}}</p></div>
+            <div class="col s8 right-align">
               <ul class="collapsible right" style="border-style: none; background-color:white;" >
                 <li>
                   <div class="collapsible-header" @click="collapse" >Location</div>
@@ -25,13 +25,13 @@
               </ul>
               <ul class="collapsible right" style="border-style: none; background-color:white;" >
                 <li>
-                  <div class="collapsible-header" @click="collapse" >History</div>
+                  <div class="collapsible-header" @click="collapse" v-if="watering != null">History</div>
                   <div class="collapsible-body white">
-                    <div v-for="(history, key) in watering" :key="key" class="left-align">
-                      Moisture: {{history.moisture}}<br>
-                      Temperature: {{history.temp}}<br>
-                      Time: {{changeTime(history.time.seconds)}}<br>
-                      Status: {{history.status}}<br>
+                    <div v-for="(hist, key) in history" :key="key" class="left-align">
+                      Moisture: {{hist.moisture}}<br>
+                      Temperature: {{hist.temp}}<br>
+                      Time: {{changeTime(hist.time.seconds).Hour}}:{{changeTime(hist.time.seconds).Min}} | {{changeTime(hist.time.seconds).Day}}-{{changeTime(hist.time.seconds).Month}}-{{changeTime(hist.time.seconds).Year}}<br>
+                      Status: {{hist.status}}<br>
                       <hr>
                     </div>
                   </div>
@@ -52,7 +52,7 @@
                 <p>Wind : {{weather.wind.speed}} m/s </p>
               </div>
             </div>
-            <div class="col s5" v-if="watering != null">
+            <div class="col s5">
               <div class="col s6 right-align">
                 <p>Soil Moisture: 95%</p>
               </div>
@@ -159,6 +159,15 @@ export default {
       }
     })
   },
+  computed: {
+    history: function () {
+      let output = []
+      if(this.watering != null){
+        for(let i = this.watering.length - 1; i >= 0 && i >= this.watering.length - 5; i--) output.push(this.watering[i])
+        return output
+      }
+    }
+  },
   methods: {
     smartWatering () {
       if(confirm('Are you sure to change time setting?')) {
@@ -184,6 +193,7 @@ export default {
           XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
           XHR.send(urlEncodedData)
           this.$router.go()
+          return 0
         }).catch(function(error) {
           console.error("Error updating document: ", error);
         })
@@ -218,13 +228,14 @@ export default {
           }
           urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+')
           XHR.onreadystatechange = function() {
-            if (XHR.readyState === 4)
-                console.log(XHR.response)
-            }
+          if (XHR.readyState === 4)
+              console.log(XHR.response)
+              return 0
+          }
           XHR.open('POST', 'http://35.225.63.230:8000/immediateWatering');
           XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
           XHR.send(urlEncodedData)
-
+        }).then(noData => {
           this.$router.go()
         }).catch(function(error) {
           console.error("Error updating document: ", error);
