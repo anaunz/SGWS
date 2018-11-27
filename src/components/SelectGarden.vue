@@ -10,14 +10,14 @@
               <div class="card-reveal">
                 <span class="card-title">
                   {{garden.name}}
-                  <i class="fa fa-close right"></i>
+                  <i class="fas fa-times-circle right"></i>
                 </span>
                 <p>Address: {{garden.address}}</p>
               </div>
               <div class="card-content black-text" >
                 <span class="card-title activator">
                   {{garden.name}}
-                  <i class="fa fa-ellipsis-v right"></i>
+                  <i class="fas fa-ellipsis-v right"></i>
                 </span>
               </div>
               <router-link class="black-text" v-bind:to="{name: 'view-garden', params: {garden_id: garden.garden_id}}">

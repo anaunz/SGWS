@@ -26,12 +26,12 @@
             </div>
             <div class="col s10">
               <span class="black-text">
-                {{weather.weather[0].main}} <br>Pressure : {{weather.main.pressure}} <br>Humidity : {{weather.main.humidity}}
+                {{weather.weather[0].main}} <br>Pressure: {{weather.main.pressure}} hPa<br>Humidity: {{weather.main.humidity}}%
               </span>            
           </div>
         </div>
       </div></td>
-            <td>Now :{{ weather.main.temp}}<br>Max : {{ weather.main.temp_max}}<br>Min : {{ weather.main.temp_min}}</td>
+            <td>Now: {{(weather.main.temp - 272.15).toFixed(1)}} °C<br>Max: {{(weather.main.temp_max - 272.15).toFixed(1)}} °C<br>Min: {{(weather.main.temp_min - 272.15).toFixed(1)}} °C</td>
           </tr>
         </tbody>
       </table>
