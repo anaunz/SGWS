@@ -8,34 +8,26 @@
            <p>Product key : </p> 
           </div>
         </div>
-        </form>
-        <form class="col s10">
-        <div class="row">
-          <div class="input-field col s12">
-            <input v-model="productkey" type="text" class="validate" required>
-            <label for="name">Productkey</label>
-            <blockquote>Example: A-123-456</blockquote>
-          </div>
-        </div>
-        </form>
-        </div>
-   <!-- <div class="row">
+      </form>
+      <form class="col s10">
         <div class="row">
           <div class="input-field col s12">
             <input v-model="productKey" type="text" class="validate" required>
-            <label for="productKey">Product Key</label>
+            <label for="productkey">Productkey</label>
             <blockquote>Example: A-123-456</blockquote>
           </div>
-        </div>-->
-        <div class="row">
+        </div>
+      </form>
+    </div>
+    <div class="row">
       <form class="col s2">
         <div class="row">
           <div class="input-field col s12">
            <p>Garden Name : </p> 
           </div>
         </div>
-        </form>
-        <form class="col s10">
+      </form>
+      <form class="col s10">
         <div class="row">
           <div class="input-field col s12">
             <input v-model="name" type="text" class="validate" required>
@@ -43,28 +35,27 @@
             <blockquote>Example: My Garden</blockquote>
           </div>
         </div>
-        </form>
-        </div>
-        <div class="row">
+      </form>
+    </div>
+    <div class="row">
       <form class="col s2">
         <div class="row">
           <div class="input-field col s12">
            <p>Address : </p> 
           </div>
         </div>
-        </form>
-        <form class="col s10">
+      </form>
+      <form class="col s10">
         <div class="row">
           <div class="input-field col s12">
             <input v-model="address" id="address" type="text" class="validate" @input="autoCompleteAPI()" required>
-            <label for="name">Address</label>
+            <label for="address">Address</label>
             <blockquote>Example: KMUTT, Bangkok, Thailand</blockquote>
           </div>
         </div>
-        </form>
-        </div>
+      </form>
+    </div>
     <button @click="addGarden" class="btn">Add a garden</button>
-  </div>
   </div>
 </template>
 
