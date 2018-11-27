@@ -7,13 +7,31 @@
     </ul>
     <h4>Edit Garden</h4>
     <div class="row">
-      <form class="col s12">
+      <form class="col s2">
+        <div class="row">
+          <div class="input-field col s12">
+           <p>Product Key : </p> 
+          </div>
+        </div>
+      </form>
+      <form class="col s10">
         <div class="row">
           <div class="input-field col s12">
             <input id="disabled" v-model="productKey" type="text" class="validate" disabled>
             <label class="active" for="disabled">Product Key</label>
           </div>
         </div>
+      </form>
+    </div>
+    <div class="row">
+      <form class="col s2">
+        <div class="row">
+          <div class="input-field col s12">
+           <p>Garden Name : </p> 
+          </div>
+        </div>
+      </form>
+      <form class = "col s10">
         <div class="row">
           <div class="input-field col s12">
             <input id="name" v-model="nameChange" type="text" class="validate">
@@ -21,6 +39,17 @@
             <blockquote>Example: My Garden</blockquote>
           </div>
         </div>
+      </form>
+    </div>
+    <div class="row">
+      <form class="col s2">
+        <div class="row">
+          <div class="input-field col s12">
+           <p>Garden Name : </p> 
+          </div>
+        </div>
+      </form>
+      <form class = "col s10">
         <div class="row">
           <div class="input-field col s12">
             <input v-model="addressChange" id="address" type="text" class="validate" @input="autoCompleteAPI()">
@@ -29,9 +58,9 @@
           </div>
         </div>
       </form>
-    </div>
-    <button @click="editGarden" class="btn yellow">Edit</button>
+    <button @click="editGarden" class="btn">Edit</button>
   </div>
+ </div>
 </template>
 
 <script>
