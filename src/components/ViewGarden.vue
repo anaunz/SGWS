@@ -71,8 +71,8 @@
                 <div class="input-field">
                   <input v-model="waterNow" type="text" class="validate" id="timeImmediate">
                   <label class="active" for="first_name2">Set Timer (min)</label>
-                  <button v-if="daily == 0" class="btn blue" style='background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));' @click="immediateWatering">Water It Now!</button>
-                  <button v-if="daily == 1" class="btn blue" style='color : black;background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));' @click="immediateWatering" disabled>Water It Now!</button>
+                  <button v-if="daily == 0" class="btn blue" style='color : black;background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));' @click="immediateWatering">Water It Now!</button>
+                  <button v-if="daily == 1" class="btn blue" style='color : #555555;;background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));opacity : 0.7;' @click="immediateWatering" disabled>Water It Now!</button>
                 </div>
               </div>
             </li>
@@ -89,9 +89,9 @@
                 <input id="timeSetBefore" value="10" v-model="timeSetBefore" type="text" class="validate">
                 <label class="active" for="first_name2">Before (24-hour)</label>
               </div>
-              <button class="btn blue" @click="smartWatering" style='color : #555555; background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));'>Set Time</button>
-              <button v-if="daily == 0" class="btn blue" @click="skipSmart" style="color : #555555; background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));"> Skip</button>
-              <button v-if="daily == 1" class="btn blue" @click="skipSmart" disabled>Skip</button>
+              <button class="btn blue" @click="smartWatering" style='color : black; background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));'>Set Time</button>
+              <button v-if="daily == 0" class="btn blue" @click="skipSmart" style="color : black; background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));"> Skip</button>
+              <button v-if="daily == 1" class="btn blue" @click="skipSmart" disabled style='color : #555555;;background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));opacity : 0.7;'>Skip</button>
             </div>
           </li>
         </ul>
