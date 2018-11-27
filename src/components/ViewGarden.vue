@@ -67,7 +67,7 @@
               <div class="collapsible-header" @click="collapse">Immediate Watering</div>
               <div class="collapsible-body">
                 <div class="input-field">
-                  <input v-model="waterNow" value="1:00" type="text" class="validate">
+                  <input v-model="waterNow" type="text" class="validate" id="timeImmediate">
                   <label class="active" for="first_name2">Set Timer (min)</label>
                   <button v-if="daily == 0" class="btn blue" style='background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));' @click="immediateWatering">Water It Now!</button>
                   <button v-if="daily == 1" class="btn blue" style='color : black;background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));' @click="immediateWatering" disabled>Water It Now!</button>
@@ -165,6 +165,24 @@ export default {
         return db.collection('garden').doc(this.$route.params.garden_id).update({
           timeSet: {before: this.timeSetBefore, after: this.timeSetAfter}
         }).then(noData => {
+          let data = '{"before":'+document.getElementById("timeSetBefore").value+',"after":'+document.getElementById("timeSetAfter").value+'}'
+          console.log(data)
+          data = JSON.parse(data)
+          let XHR = new XMLHttpRequest()
+          let urlEncodedData = ""
+          let urlEncodedDataPairs = []
+          var name
+          for(name in data) {
+            urlEncodedDataPairs.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]))
+          }
+          urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+')
+          XHR.onreadystatechange = function() {
+            if (XHR.readyState === 4)
+                console.log(XHR.response)
+            }
+          XHR.open('POST', 'http://35.225.63.230:8000/smartWatering');
+          XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+          XHR.send(urlEncodedData)
           this.$router.go()
         }).catch(function(error) {
           console.error("Error updating document: ", error);
@@ -189,9 +207,24 @@ export default {
           watering: firebase.firestore.FieldValue.arrayUnion({time: new Date(), temp: this.weather.main.temp, moisture: 95, status: 'Immediate Watering'}),
           daily: 1
         }).then(noData => {
-          let xhr = new XMLHttpRequest()
-          xhr.open('POST', 'http://35.225.63.230:8000/immediateWatering', true)
-          xhr.send('time=1')
+          let data = '{"time":'+document.getElementById("timeImmediate").value+'}'
+          data = JSON.parse(data)
+          let XHR = new XMLHttpRequest()
+          let urlEncodedData = ""
+          let urlEncodedDataPairs = []
+          var name
+          for(name in data) {
+            urlEncodedDataPairs.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]))
+          }
+          urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+')
+          XHR.onreadystatechange = function() {
+            if (XHR.readyState === 4)
+                console.log(XHR.response)
+            }
+          XHR.open('POST', 'http://35.225.63.230:8000/immediateWatering');
+          XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+          XHR.send(urlEncodedData)
+
           this.$router.go()
         }).catch(function(error) {
           console.error("Error updating document: ", error);

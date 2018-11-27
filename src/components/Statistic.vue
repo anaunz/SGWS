@@ -1,5 +1,5 @@
 <template>
-  <div id="statistic" class="container">
+  <div id="statistic" v-if="weather !== 'N/A'" class="container">
     <div v-if="garden_id != null">
       <ul class="collection with-header">
         <li class="collection-header">
@@ -7,8 +7,34 @@
         </li>
       </ul>
       <h4>Statistic</h4>
-      Weather from API: {{weather}} <br>
-      Time Setting: {{timeSet}} <br>
+      Weather at "{{weather.name}} {{weather.sys.country}}" from API:<br>
+      <table>
+        <thead>
+          <tr>
+              <th>Location</th>
+              <th>Weather</th>
+              <th>Temperature</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Longitude : {{weather.coord.lon}}<br>Latitude : {{weather.coord.lat}}</td>
+            <td><div class="col s12 m8 offset-m2 l6 offset-l3">
+          <div class="row valign-wrapper">
+            <div class="col s2">
+              <i class="fas fa-cloud-sun-rain" style="font-size:60px"></i>
+            </div>
+            <div class="col s10">
+              <span class="black-text">
+                {{weather.weather[0].main}} <br>Pressure : {{weather.main.pressure}} <br>Humidity : {{weather.main.humidity}}
+              </span>            
+          </div>
+        </div>
+      </div></td>
+            <td>Now :{{ weather.main.temp}}<br>Max : {{ weather.main.temp_max}}<br>Min : {{ weather.main.temp_min}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div v-if="garden_id == null" class="center">
       <h5>Sorry, there is no garden id you want to see</h5>
@@ -23,7 +49,7 @@ export default {
   data () {
     return {
       garden_id: null,
-      weather: 'N/A',
+      weather: "N/A",
       timeSet: null
     }
   },
@@ -49,3 +75,5 @@ export default {
   }
 }
 </script>
+
+
