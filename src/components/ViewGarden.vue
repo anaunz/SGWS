@@ -8,36 +8,92 @@
               <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="right"> Statistic</router-link>
             </li>
           </ul>
-          <h2>{{name}}</h2>
-          <p>Garden ID#: {{garden_id}}</p>
-          <ul class="collapsible " style="border-style: none; background-color:white;" >
-            <li>
-              <div class="collapsible-header" @click="collapse" >Location : {{address}}</div>
-              <div class="collapsible-body white">
-                <div v-if="markers != null">
-                  <gmap-map :center="markers.position" :zoom="16" style="width:100%; height: 400px;">
-                    <gmap-marker :position="markers.position"></gmap-marker>
-                  </gmap-map>
+          <div class="row">
+            <div class="col s3"><h2>{{name}}</h2><p>Garden ID#: {{garden_id}}</p><p>Location: {{address}}</p></div>
+            <div class="col s9 right-align">
+              <ul class="collapsible right" style="border-style: none; background-color:white;" >
+                <li>
+                  <div class="collapsible-header" @click="collapse" >Location</div>
+                  <div class="collapsible-body white">
+                    <div v-if="markers != null">
+                      <gmap-map :center="markers.position" :zoom="16" style="width:400px; height: 400px;">
+                        <gmap-marker :position="markers.position"></gmap-marker>
+                      </gmap-map>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <ul class="collapsible right" style="border-style: none; background-color:white;" >
+                <li>
+                  <div class="collapsible-header" @click="collapse" >History</div>
+                  <div class="collapsible-body white">
+                    <div v-for="(history, key) in watering" :key="key" class="left-align">
+                      Moisture: {{history.moisture}}<br>
+                      Temperature: {{history.temp}}<br>
+                      Time: {{changeTime(history.time.seconds)}}<br>
+                      Status: {{history.status}}<br>
+                      <hr>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <h5 style="text-align : center">Real Time Status</h5>
+          <div class="row">
+            <div class="col s5 row offset-s1" v-if="weather != 'N/A'">
+              <div class="col s6 center-align">
+                <i style="font-size : 108px;" class="fas fa-cloud-sun-rain"></i>
+              </div>
+              <div class="col s6">
+                <p>Weather : {{weather.weather[0].main}}  </p>
+                <p>Temperature : {{(weather.main.temp - 272.15).toFixed(1)}} °C</p>
+                <p>Humidity : {{weather.main.humidity}} %</p>
+                <p>Wind : {{weather.wind.speed}} m/s </p>
+              </div>
+            </div>
+            <div class="col s5" v-if="watering != null">
+              <div class="col s6 right-align">
+                <p>Soil Moisture: 95%</p>
+              </div>
+              <div class="col s6 center-align">
+                <i style="font-size : 108px;" class="fas fa-tint"></i>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="width: 100%">
+        <ul class="collapsible col s12 m6" >
+            <li class="">
+              <div class="collapsible-header" @click="collapse">Immediate Watering</div>
+              <div class="collapsible-body">
+                <div class="input-field">
+                  <input v-model="waterNow" value="1:00" type="text" class="validate">
+                  <label class="active" for="first_name2">Set Timer (min)</label>
+                  <button v-if="daily == 0" class="btn blue" style='background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));' @click="immediateWatering">Water It Now!</button>
+                  <button v-if="daily == 1" class="btn blue" style='color : black;background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));' @click="immediateWatering" disabled>Water It Now!</button>
                 </div>
               </div>
             </li>
-          </ul>
-          <p style="text-align : center">Real Time Status</p>
-          <div class="row">
-            <div class="col s6" v-if="weather != null">
-              <i style="font-size : 62px; " class="fas fa-cloud-sun-rain center-align"></i>
-              <p style="text-align : center">Weather : {{weather.weather[0].main}}  </p>
-              <p style="text-align : center">Temperature : {{(weather.main.temp-272.15).toFixed(1)}} °C</p>
-              <p style="text-align : center">Humidity : {{weather.main.humidity}} %</p>
-              <p style="text-align : center">Wind : {{weather.wind.speed}} m/s </p>
+        </ul>
+		    <ul class="collapsible col s12 m6" style="max-width:50%">
+          <li class="">
+            <div class="collapsible-header" @click="collapse">Smart Watering</div>
+            <div class="collapsible-body">
+              <div class="input-field">
+                <input id="timeSetAfter" value="7" v-model="timeSetAfter" type="text" class="validate">
+                <label class="active" for="first_name2">After (24-hour)</label>
+              </div>
+              <div class="input-field">
+                <input id="timeSetBefore" value="10" v-model="timeSetBefore" type="text" class="validate">
+                <label class="active" for="first_name2">Before (24-hour)</label>
+              </div>
+              <button class="btn blue" @click="smartWatering" style='color : #555555; background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));'>Set Time</button>
+              <button v-if="daily == 0" class="btn blue" @click="skipSmart" style="color : #555555; background-image :linear-gradient(to right, rgb(109,255,111), rgb(0,255,255));"> Skip</button>
+              <button v-if="daily == 1" class="btn blue" @click="skipSmart" disabled>Skip</button>
             </div>
-            <div class="col s6" v-if="weather != null">
-              <i style="font-size : 62px;" class="fas fa-tint"></i>
-              <p style="text-align : center">Soil Moisture: {{watering[0].moisture}} %  </p>
-              <p style="text-align : center"> Watering Status: {{watering[0].status}} </p>
-              <p style="text-align : center"> Watering: {{watering[0].time.seconds}} </p>
-            </div>
-          </div>
+          </li>
+        </ul>
+      </div>
         </div>
         <button @click="removeGarden" class="btn red right">Remove Garden</button>
     </div>
@@ -84,15 +140,14 @@ export default {
           vm.daily = doc.data().daily
           if(doc.data().location != null){
             return $.getJSON('https://api.openweathermap.org/data/2.5/weather?lat=' + vm.location.lat + '&lon=' + vm.location.long + '&appid=86eb79574951a234c5a5913b940ca90b', function(data) {
-              console.log(vm.garden_id)
               vm.weather = data
               const marker = {
                 lat: vm.location.lat,
                 lng: vm.location.long
               }
               vm.markers = { position: marker }
-              /*document.getElementById('timeSetBefore').value = vm.timeSetBefore
-              document.getElementById('timeSetAfter').value = vm.timeSetAfter*/
+              document.getElementById('timeSetBefore').value = vm.timeSetBefore
+              document.getElementById('timeSetAfter').value = vm.timeSetAfter
             })
           }
         })
@@ -157,6 +212,11 @@ export default {
     },
     collapse () {
       $('.collapsible').collapsible()
+    },
+    changeTime (time) {
+      let timeStamp = new Date(time * 1000)
+      let dateFormat = {Year: timeStamp.getFullYear(), Month: timeStamp.getMonth() + 1, Day: timeStamp.getDate(), Hour: timeStamp.getHours(), Min: timeStamp.getMinutes()}
+      return dateFormat
     }
   }
 }
