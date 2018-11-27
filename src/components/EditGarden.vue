@@ -1,6 +1,6 @@
 <template>
   <div id="add-garden" class="container">
-    <ul class="collection with-header">
+    <ul class="collection with-header" style="border-style: none">
       <li class="collection-header">
         <router-link v-if="garden_id != null" v-bind:to="{name: 'view-garden', params: {garden_id: garden_id}}" class="fa fa-angle-left fa-lg"></router-link>
       </li>

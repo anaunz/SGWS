@@ -5,7 +5,9 @@
           <ul class="collection with-header" style="border-style: none">
             <li class="collection-header">
               <router-link to="/" class="fa fa-angle-left fa-lg"></router-link>
-              <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="right"> Statistic</router-link>
+              <router-link v-if="garden_id != null" v-bind:to="{name: 'statistic', params: {garden_id: garden_id, weather: weather}}" class="right">Statistic</router-link>
+              <span class="right"> | </span>
+              <router-link v-if="garden_id != null" v-bind:to="{name: 'edit-garden', params: {garden_id: garden_id}}" class="right">Edit Garden</router-link>
             </li>
           </ul>
           <div class="row">

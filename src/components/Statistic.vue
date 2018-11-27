@@ -1,7 +1,7 @@
 <template>
   <div id="statistic" v-if="weather !== 'N/A'" class="container">
     <div v-if="garden_id != null">
-      <ul class="collection with-header">
+      <ul class="collection with-header" style="border-style: none">
         <li class="collection-header">
           <router-link v-if="garden_id != null" v-bind:to="{name: 'view-garden', params: {garden_id: garden_id}}" class="fa fa-angle-left fa-lg"></router-link>
         </li>
