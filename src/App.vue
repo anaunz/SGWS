@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <Navbar />
+    <div class="center" style="color:red"><h5>*** The server of this demo has been shut down since 19th December 2018 ***</h5>
+    There won't be any information on Smart Watering History after that, but Immediate Watering is still functional</div>
     <div id="main">
       <router-view/>
     </div>
